@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vital Test Azure</title>
+</head>
+<body>
+  <h2>Prueba Azure → Raspberry</h2>
+  <button onclick="test()">Conectar</button>
+  <pre id="out"></pre>
+
+  <script>
+    async function test() {
+      const res = await fetch("https://nonexhaustible-sol-legislatively.ngrok-free.dev/");
+      const data = await res.json();
+      document.getElementById("out").innerText =
+        JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
