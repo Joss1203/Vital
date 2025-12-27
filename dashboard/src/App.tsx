@@ -197,7 +197,7 @@ export default function App() {
           borderRadius: 12,
         }}
       >
-        <h3>📌 Interpretación clínica</h3>
+        <h3> Interpretación clínica</h3>
 
         <p>
           Los valores mostrados corresponden a una evaluación fisiológica en
@@ -222,7 +222,7 @@ export default function App() {
           borderRadius: 12,
         }}
       >
-        <h3>🏥 Contacto y referencia médica</h3>
+        <h3> Contacto y referencia médica</h3>
 
         <ul>
           <li>
