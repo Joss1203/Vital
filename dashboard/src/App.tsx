@@ -6,28 +6,11 @@ import {
   descargarPDF,
 } from "./api";
 
-import {
-  Chart as ChartJS,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Legend,
-  Tooltip,
-  type ChartOptions,
-} from "chart.js";
+import "chart.js/auto";
 
-import { Line } from "react-chartjs-2";
-
-ChartJS.register(
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Legend,
-  Tooltip
-);
-
+/* =========================
+   TIPOS
+========================= */
 type Dato = {
   fecha: string;
   bpm: number;
@@ -35,104 +18,265 @@ type Dato = {
   temperatura: number;
 };
 
+const API_URL = "http://192.168.0.32:8000";
+
+
+/* =========================
+   FUNCIONES CLÍNICAS
+========================= */
+function evaluarBPM(bpm?: number) {
+  if (!bpm) return null;
+  if (bpm < 50) return { nivel: "ALERTA", texto: "Bradicardia detectada", color: "#dc2626" };
+  if (bpm < 60) return { nivel: "ADVERTENCIA", texto: "Frecuencia cardiaca baja", color: "#f59e0b" };
+  if (bpm <= 100) return { nivel: "NORMAL", texto: "Frecuencia cardiaca normal", color: "#16a34a" };
+  if (bpm <= 120) return { nivel: "ADVERTENCIA", texto: "Taquicardia leve", color: "#f59e0b" };
+  return { nivel: "ALERTA", texto: "Taquicardia severa", color: "#dc2626" };
+}
+
+function evaluarSpO2(spo2?: number) {
+  if (!spo2) return null;
+  if (spo2 < 90) return { nivel: "ALERTA", texto: "Hipoxemia", color: "#dc2626" };
+  if (spo2 < 95) return { nivel: "ADVERTENCIA", texto: "Saturación baja", color: "#f59e0b" };
+  return { nivel: "NORMAL", texto: "Saturación normal", color: "#16a34a" };
+}
+
+function evaluarTemp(temp?: number) {
+  if (!temp) return null;
+  if (temp < 34) return { nivel: "ALERTA", texto: "Hipotermia", color: "#dc2626" };
+  if (temp <= 37.5) return { nivel: "NORMAL", texto: "Temperatura normal", color: "#16a34a" };
+  if (temp <= 38) return { nivel: "ADVERTENCIA", texto: "Fiebre", color: "#f59e0b" };
+  return { nivel: "ALERTA", texto: "Fiebre", color: "#2626dcff" };
+}
+
+/* =========================
+   COMPONENTE PRINCIPAL
+========================= */
 export default function App() {
   const [datos, setDatos] = useState<Dato | null>(null);
   const [historial, setHistorial] = useState<Dato[]>([]);
   const [activo, setActivo] = useState(false);
-  const [fechaPDF, setFechaPDF] = useState(() => {
-    const d = new Date();
-    return d.toISOString().slice(0, 10);
-  });
+  const [fechaPDF, setFechaPDF] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
 
+  /* =========================
+     LECTURA DE DATOS
+  ========================= */
   useEffect(() => {
     const timer = setInterval(async () => {
       try {
         const d = await obtenerUltimo();
-        if (d && d.bpm !== undefined) {
+        if (d) {
           setDatos(d);
           setHistorial((prev) => [...prev, d].slice(-30));
         }
       } catch {
-        console.log("Sin conexión al backend");
+        console.log("Backend no disponible");
       }
     }, 2000);
 
     return () => clearInterval(timer);
   }, []);
 
-  const chartData = {
-    labels: historial.map((_, i) => i.toString()),
-    datasets: [
-      {
-        label: "BPM",
-        data: historial.map((d) => d.bpm),
-        borderColor: "red",
-        tension: 0.3,
-      },
-      {
-        label: "SpO₂",
-        data: historial.map((d) => d.spo2),
-        borderColor: "green",
-        tension: 0.3,
-      },
-      {
-        label: "Temp °C",
-        data: historial.map((d) => d.temperatura),
-        borderColor: "cyan",
-        tension: 0.3,
-      },
-    ],
-  };
+  /* =========================
+     ALERTAS
+  ========================= */
+  const alertaBPM = evaluarBPM(datos?.bpm);
+  const alertaSpO2 = evaluarSpO2(datos?.spo2);
+  const alertaTemp = evaluarTemp(datos?.temperatura);
 
-  const chartOptions: ChartOptions<"line"> = {
-    responsive: true,
-    plugins: {
-      legend: {
-        labels: { color: "black" },
-      },
-    },
-  };
+  const alertas = [alertaBPM, alertaSpO2, alertaTemp].filter(
+    (a) => a && a.nivel !== "NORMAL"
+  );
 
   return (
-    <div style={{ background: "#0e1621", minHeight: "100vh", color: "white", padding: 20 }}>
-      <h1>Monitor de Signos Vitales</h1>
+    <div
+      style={{
+        background: "#0e1621",
+        minHeight: "100vh",
+        color: "white",
+        padding: 30,
+        lineHeight: 1.6, // 👈 INTERLINEADO
+      }}
+    >
 
-      <div style={{ display: "flex", gap: 20 }}>
-        <div>
-          <h3>BPM</h3>
-          <p>{datos?.bpm ?? "--"}</p>
+
+  {/* IMAGEN */}
+  <div style={{ flex: 1, textAlign: "right" }}>
+    <img
+      src="/monitor-clinico.jpg"
+      alt="Monitor de signos vitales"
+      style={{
+        maxWidth: "100%",
+        borderRadius: 12,
+        boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
+      }}
+    />
+  </div>
+
+  {/* =========================
+          VALORES
+      ========================= */}
+      <div style={{ display: "flex", gap: 20, marginTop: 20 }}>
+        <div style={{ background: "#1e293b", padding: 20, borderRadius: 10 }}>
+          <h3>❤️ BPM</h3>
+          <h2>{datos?.bpm ?? "--"}</h2>
+          
         </div>
-        <div>
-          <h3>SpO₂</h3>
-          <p>{datos?.spo2 ?? "--"}%</p>
+
+        <div style={{ background: "#1e293b", padding: 20, borderRadius: 10 }}>
+          <h3>🫁 SpO₂</h3>
+          <h2>{datos?.spo2 ?? "--"}%</h2>
         </div>
-        <div>
-          <h3>Temp</h3>
-          <p>{datos?.temperatura ?? "--"} °C</p>
+
+        <div style={{ background: "#1e293b", padding: 20, borderRadius: 10 }}>
+          <h3>🌡 Temperatura</h3>
+          <h2>{datos?.temperatura ?? "--"} °C</h2>
         </div>
       </div>
 
-      <div style={{ marginTop: 20 }}>
-        <button onClick={async () => { await iniciarMedicion(); setActivo(true); }}>
+      {/* =========================
+          BOTONES
+      ========================= */}
+      <div style={{ marginTop: 30 }}>
+        <button
+          onClick={async () => {
+            await iniciarMedicion();
+            setActivo(true);
+          }}
+        >
           Iniciar medición
         </button>
 
-        <button style={{ marginLeft: 10 }} onClick={async () => { await detenerMedicion(); setActivo(false); }}>
+        <button
+          style={{ marginLeft: 10 }}
+          onClick={async () => {
+            await detenerMedicion();
+            setActivo(false);
+          }}
+        >
           Detener medición
         </button>
+
+        <p style={{ marginTop: 10, color: activo ? "lime" : "red" }}>
+          Estado: {activo ? "Activo" : "Detenido"}
+        </p>
       </div>
 
-      <p style={{ color: activo ? "lime" : "red" }}>
-        Estado: {activo ? "Activo" : "Detenido"}
-      </p>
+      {/* =========================
+          ALERTAS CLÍNICAS
+      ========================= */}
+      {alertas.length > 0 && (
+        <div
+          style={{
+            marginTop: 30,
+            background: "#1e293b",
+            padding: 20,
+            borderRadius: 12,
+            borderLeft: "6px solid #dc2626",
+          }}
+        >
+          <h3>🚨 Alertas clínicas activas</h3>
 
-      <div style={{ background: "white", padding: 10 }}>
-        <Line data={chartData} options={chartOptions} />
+          {alertas.map((a, i) => (
+            <p key={i} style={{ color: a.color }}>
+              <b>{a.nivel}:</b> {a.texto}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {/* =========================
+          INTERPRETACIÓN CLÍNICA
+      ========================= */}
+      <div
+        style={{
+          marginTop: 30,
+          background: "#0f1c2e",
+          padding: 20,
+          borderRadius: 12,
+        }}
+      >
+        <h3>📌 Interpretación clínica</h3>
+
+        <p>
+          Los valores mostrados corresponden a una evaluación fisiológica en
+          tiempo real. Las alertas indican parámetros fuera de los rangos
+          normales para un adulto.
+        </p>
+
+        <p>
+          Este sistema es una herramienta de apoyo y no sustituye la valoración
+          médica profesional.
+        </p>
       </div>
 
-      <div style={{ marginTop: 20 }}>
-        <input type="date" value={fechaPDF} onChange={(e) => setFechaPDF(e.target.value)} />
-        <button onClick={() => descargarPDF(fechaPDF)}>Descargar PDF</button>
+      {/* =========================
+          CONTACTO MÉDICO
+      ========================= */}
+      <div
+        style={{
+          marginTop: 30,
+          background: "#1e293b",
+          padding: 20,
+          borderRadius: 12,
+        }}
+      >
+        <h3>🏥 Contacto y referencia médica</h3>
+
+        <ul>
+          <li>
+            <a
+              href="https://www.gob.mx/imss"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#60a5fa" }}
+            >
+              Instituto Mexicano del Seguro Social (IMSS)
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://cruzrojamexicana.org.mx/"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#60a5fa" }}
+            >
+              Cruz Roja Mexicana
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.gob.mx/salud"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#60a5fa" }}
+            >
+              Secretaría de Salud
+            </a>
+          </li>
+        </ul>
+
+        <p style={{ fontSize: 14 }}>
+          En caso de emergencia, acudir a la unidad médica más cercana.
+        </p>
+      </div>
+
+      {/* =========================
+          PDF
+      ========================= */}
+      <div style={{ marginTop: 30 }}>
+        <input
+          type="date"
+          value={fechaPDF}
+          onChange={(e) => setFechaPDF(e.target.value)}
+        />
+        <button
+          style={{ marginLeft: 10 }}
+          onClick={() => descargarPDF(fechaPDF)}
+        >
+          Descargar PDF
+        </button>
       </div>
     </div>
   );
