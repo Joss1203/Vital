@@ -117,7 +117,16 @@ export default function App() {
   {/* =========================
           VALORES
       ========================= */}
-      <div style={{ display: "flex", gap: 20, marginTop: 20 }}>
+      <div
+  style={{
+    display: "flex",
+    gap: 20,
+    marginTop: 40,
+    justifyContent: "center", 
+    alignItems: "center",     
+  }}
+>
+
         <div style={{ background: "#1e293b", padding: 20, borderRadius: 10 }}>
           <h3>❤️ BPM</h3>
           <h2>{datos?.bpm ?? "--"}</h2>
@@ -138,7 +147,10 @@ export default function App() {
       {/* =========================
           BOTONES
       ========================= */}
-      <div style={{ marginTop: 30 }}>
+      <div style={{ marginTop: 30,
+        textAlign: "center",
+        justifyContent: "center",
+       }}>
         <button
           onClick={async () => {
             await iniciarMedicion();
