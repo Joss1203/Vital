@@ -104,7 +104,7 @@ export default function App() {
   {/* IMAGEN */}
   <div style={{ flex: 1, textAlign: "right" }}>
     <img 
-      src="/monitor-clinico.jpg" 
+      src="/monitoreo.jpg" 
       alt="Monitor"
       style={{
         maxWidth: "100%",
