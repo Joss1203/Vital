@@ -99,13 +99,13 @@ export default function App() {
         lineHeight: 1.6, // 👈 INTERLINEADO
       }}
     >
-
+  
 
   {/* IMAGEN */}
   <div style={{ flex: 1, textAlign: "right" }}>
-    <img
-      src="/monitor-clinico.jpg"
-      alt="Monitor de signos vitales"
+    <img 
+      src="/monitor-clinico.jpg" 
+      alt="Monitor"
       style={{
         maxWidth: "100%",
         borderRadius: 12,
