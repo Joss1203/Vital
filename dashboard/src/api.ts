@@ -27,5 +27,6 @@ export async function detenerMedicion() {
 // PDF (PENDIENTE)
 // =========================
 export function descargarPDF(fecha: string) {
-  alert(`PDF del ${fecha} (pendiente de implementación)`);
+  window.open(`http://192.168.0.32:8000/pdf/fecha/${fecha}`, "_blank");
 }
+
