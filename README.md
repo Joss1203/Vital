@@ -93,7 +93,7 @@ Ejemplos:
 - ReportLab
 - Azure Static Web Apps
 
-## Para editar Frontend
+# Para editar Frontend
 ├── vital/
 ├── esp32/
 │   └── esp32_mqtt.ino
@@ -104,8 +104,7 @@ Ejemplos:
     │   ├── App.tsx 
     │   └── api.ts
     │   └── main.tsx
-│
-└── README.md
+
 git clone https://github.com/Joss1203/Vital.git
 
 cd dashboard
@@ -114,7 +113,7 @@ npm run dev
 
 editar App.tsx
 
-## backend
+# backend
 vital-iot/
 ├── esp32/
 │   └── esp32_mqtt.ino
@@ -124,8 +123,7 @@ vital-iot/
 │   ├── mqtt_listener.py
 │   ├── database.py
 │   └── vital.db
-│
-└── README.md
+
 desde rasperry cd /home/jocelyn/Desktop/vital/vital_api
  - python3 mqtt_listener.py
 
