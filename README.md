@@ -3,20 +3,18 @@
 # Arquitectura General
 ```text
 ESP32 (sensores)
-   │
-   │ MQTT sobre TLS
-   ▼
-☁️ HiveMQ Cloud
-   │
-   │ MQTT sobre TLS
-   ▼
-🍓 Raspberry Pi
-   ├── mqtt_listener.py
-   ├── SQLite (vital.db)
-   └── FastAPI
-           │
-           ▼
-🌐 React + Vite (Azure Static Web Apps)
+│
+├── MQTT sobre TLS
+│   └── HiveMQ Cloud
+│
+├── Raspberry Pi
+│   ├── mqtt_listener.py
+│   └── SQLite (vital.db)
+│
+└── Backend / Frontend
+    ├── FastAPI
+    └── React + Vite (Azure Static Web Apps)
+
 
 # Sensores Utilizados
 
