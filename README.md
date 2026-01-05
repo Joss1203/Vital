@@ -14,7 +14,7 @@ ESP32 (sensores)
 └── Backend / Frontend
     ├── FastAPI
     └── React + Vite (Azure Static Web Apps)
-
+```
 
 # Sensores Utilizados
 
@@ -109,4 +109,7 @@ desde rasperry cd /home/jocelyn/Desktop/vital/vital_api
 
 en otra terminar cd /home/jocelyn/Desktop/vital/vital_api
 - source venv/bin/activate
-    - uvicorn main_app --host 0.0.0.0 --port 8000
+    - uvicorn main:app --host 0.0.0.0 --port 8000
+
+## Reporte link
+https://1drv.ms/w/c/c2312889326e6f99/EQiiodjOwgRBsKnKYKzXuQQBWJMr1GyuW8MnEb2vKq9opw?e=DMCRxZ
