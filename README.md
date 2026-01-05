@@ -94,16 +94,6 @@ Ejemplos:
 - Azure Static Web Apps
 
 # Para editar Frontend
-├── vital/
-├── esp32/
-│   └── esp32_mqtt.ino
-│
-├── dashboard/
-│   ├── public
-    │ 
-    │   ├── App.tsx 
-    │   └── api.ts
-    │   └── main.tsx
 
 git clone https://github.com/Joss1203/Vital.git
 
@@ -114,15 +104,6 @@ npm run dev
 editar App.tsx
 
 # backend
-vital-iot/
-├── esp32/
-│   └── esp32_mqtt.ino
-│
-├── backend/
-│   ├── main.py
-│   ├── mqtt_listener.py
-│   ├── database.py
-│   └── vital.db
 
 desde rasperry cd /home/jocelyn/Desktop/vital/vital_api
  - python3 mqtt_listener.py
