@@ -1,6 +1,7 @@
 # Sistema IoT de Monitoreo de Signos Vitales
 
 # Arquitectura General
+```text
 ESP32 (sensores)
    │
    │ MQTT sobre TLS
