@@ -1,4 +1,9 @@
 # Sistema IoT de Monitoreo de Signos Vitales
+#equipo: 
+- Amador Martinez Jocelyn Lucia 
+- Gomez Rivera Amir  
+- Maldonado Romero Daniel  
+- Ocaña Castro Héctor Rigel 
 
 # Arquitectura General
 ```text
